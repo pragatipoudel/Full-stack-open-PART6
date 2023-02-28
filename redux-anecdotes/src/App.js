@@ -1,6 +1,6 @@
 import React from 'react'
 import Anecdotes from './components/anecdotes'
-import NewAnecdote from './components/newanecdote'
+import AnecdoteForm from './components/newanecdote'
 
 
 const App = () => {
@@ -8,7 +8,7 @@ const App = () => {
     <div>
       <h2>Anecdotes</h2>
       <Anecdotes />
-      <NewAnecdote />
+      <AnecdoteForm />
     </div>
   )
 }
