@@ -5,12 +5,16 @@ import { handleVote } from '../reducers/anecdoteReducer'
 
 const AnecdoteList = () => {
     const dispatch = useDispatch()
-    const anecdotes = useSelector(state => state)
+    const anecdotes = useSelector(state => state.anecdotes)
+    const filter = useSelector(state => state.filter)
 
-    const sortedAnecdotes = [...anecdotes]
+    const filteredAnecdotes = anecdotes.filter(anecdote => anecdote.content.toLowerCase().includes(filter.toLowerCase()))
+
+    const sortedAnecdotes = [...filteredAnecdotes]
     sortedAnecdotes.sort((a, b) => {
         return b.votes - a.votes
     })
+
     const handleClick = (id) => {
         dispatch(handleVote(id))
     } 
