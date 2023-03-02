@@ -1,9 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { useNotificationDispatch } from './components/anecdoteContext'
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 import { getAnecdotes, updateAnecdote } from './components/requests'
 
 const App = () => {
+
   const queryClient = useQueryClient()
   const updateAnecdoteMutation = useMutation(updateAnecdote, {
     onSuccess: (updateAnecdote) => {
@@ -13,14 +15,21 @@ const App = () => {
     } 
   })
 
-  const handleVote = (anecdote) => {
-    updateAnecdoteMutation.mutate({...anecdote, votes: anecdote.votes + 1})
-  }
 
   const result = useQuery('anecdotes', getAnecdotes, {
     retry: 1,
     refetchOnWindowFocus: false
   })
+
+  const dispatch = useNotificationDispatch()
+  const handleVote = (anecdote) => {
+    updateAnecdoteMutation.mutate({...anecdote, votes: anecdote.votes + 1})
+    dispatch(`You voted ${anecdote.content}`)
+    setTimeout(() => {
+      dispatch('')
+    }, 5000)
+  }
+
 
   if (result.isLoading) {
     return <div>loading data...</div>
@@ -35,7 +44,7 @@ const App = () => {
   return (
     <div>
       <h3>Anecdote app</h3>
-    
+
       <Notification />
       <AnecdoteForm />
     
@@ -50,7 +59,7 @@ const App = () => {
           </div>
         </div>
       )}
-    </div>
+      </div>
   )
 }
 

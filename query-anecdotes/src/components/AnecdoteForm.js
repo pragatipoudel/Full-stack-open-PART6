@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "react-query"
+import { useNotificationDispatch } from "./anecdoteContext"
 import { createAnecdote } from "./requests"
 
 const AnecdoteForm = () => {
@@ -9,11 +10,16 @@ const AnecdoteForm = () => {
       queryClient.setQueryData('anecdotes', anecdotes.concat(newAnecdote))
     }
   })
+  const dispatch = useNotificationDispatch()
   const onCreate = (event) => {
     event.preventDefault()
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
     newAnecdoteMutation.mutate({ content, votes: 0 })
+    dispatch(`A new anecdotes ${content} was added`)
+    setTimeout(() => {
+      dispatch('')
+    }, 5000)
 }
 
   return (
