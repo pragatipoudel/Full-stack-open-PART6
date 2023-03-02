@@ -4,22 +4,30 @@ import { createAnecdote } from "./requests"
 
 const AnecdoteForm = () => {
   const queryClient = useQueryClient()
+  const dispatch = useNotificationDispatch()
+
   const newAnecdoteMutation = useMutation(createAnecdote, {
     onSuccess: (newAnecdote) => {
       const anecdotes = queryClient.getQueryData('anecdotes')
       queryClient.setQueryData('anecdotes', anecdotes.concat(newAnecdote))
+      dispatch(`A new anecdotes ${newAnecdote.content} was added`)
+      setTimeout(() => {
+        dispatch('')
+      }, 5000)
+    },
+    onError: (error) => {
+      dispatch(error.response.data.error)
+      setTimeout(() => {
+        dispatch('')
+      }, 5000)
     }
   })
-  const dispatch = useNotificationDispatch()
+
   const onCreate = (event) => {
     event.preventDefault()
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
     newAnecdoteMutation.mutate({ content, votes: 0 })
-    dispatch(`A new anecdotes ${content} was added`)
-    setTimeout(() => {
-      dispatch('')
-    }, 5000)
 }
 
   return (
